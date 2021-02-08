@@ -31,10 +31,10 @@ def choose_word():
     global length
     wordlist = 'words_list.json'
     with open(wordlist) as f:
-      wordlistdata = json.load(f)
+        wordlistdata = json.load(f)
     for v in wordlistdata.values():
-      word = random.choice(v)
-      original_word = word
+        word = random.choice(v)
+        original_word = word
     length = len(word)
     display = '_' * length
     return length, word, original_word
@@ -43,37 +43,36 @@ def choose_word():
 #    return [i for i, letter in enumerate(word) if letter == guess]
 
 def display_board():
-  global display
-  print(display)
+    global display
+    print(display)
 
 def you_win():
-  print("YOU WIN! The word was: " + original_word + "! Well done, " + name.title() + "!")
+    print("YOU WIN! The word was: " + original_word + "! Well done, " + name.title() + "!")
 
 def handle_turn():
-  global word
-  global display
-  global count
-  global limit
-  guess = input('Enter a letter..')
-  guess = guess.strip()
-  if len(guess) != 1 or guess.isalpha() == False:
-    print("Invalid Input, Try again\n")
-  elif guess in word:
-    print('correct!')
-    already_guessed.append(guess)
-    index = word.find(guess)
-    #word.find(guess)
-    word = word[:index] + "_" + word[index + 1:]
-    display = display[:index] + guess + display[index + 1:]
+    global word
+    global display
+    global count
+    global limit
+    guess = input('Enter a letter..')
+    guess = guess.strip()
+    if len(guess) != 1 or guess.isalpha() == False:
+        print("Invalid Input, Try again\n")
+    elif guess in word:
+        print('correct!')
+        while guess in word:
+            already_guessed.append(guess)
+            index = word.find(guess)
+            word = word[:index] + "_" + word[index + 1:]
+            display = display[:index] + guess + display[index + 1:]
+    elif guess in already_guessed:
+        if guess not in word:
+            print("Already guessed! Try another letter.\n")
 
-  elif guess in already_guessed:
-    if guess not in word:
-      print("Already guessed! Try another letter.\n")
-
-  else:
-    print('WRONG!')
-    count += 1
-    hangman()
+    else:
+        print('WRONG!')
+        count += 1
+        hangman()
 
 def hangman():
     global count
@@ -101,7 +100,7 @@ def hangman():
         print("WRONG guess. " + str(limit - count) + " guesses remaining\n")
 
     elif count == 3:
-       print("   _____ \n"
+        print("   _____ \n"
              "  |     | \n"
              "  |     |\n"
              "  |     | \n"
@@ -109,7 +108,7 @@ def hangman():
              "  |      \n"
              "  |      \n"
              "__|__\n")
-       print("WRONG guess. " + str(limit - count) + " guesses remaining\n")
+        print("WRONG guess. " + str(limit - count) + " guesses remaining\n")
 
     elif count == 4:
         print("   _____ \n"
@@ -131,8 +130,7 @@ def hangman():
               "  |    /|\ \n"
               "  |    / \ \n"
               "__|__\n")
-        print("WRONG guess. You are hanged!!!\n")
-        print("The word was:" + original_word + "!")
+        print("WRONG guess. You are hanged!!!\nThe word was:" + original_word + "!")
         lose = True
         game_still_going = False
 
@@ -147,7 +145,7 @@ def play_game():
 
 def main():
     choose_word()
-    #print(word)
+    print(word)
     print('Can you guess the word?')
     while game_still_going:
       play_game()
