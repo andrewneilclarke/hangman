@@ -11,7 +11,9 @@ display = '_' * length
 already_guessed = []
 game_still_going = True
 lose = False
+win = False
 name = ''
+guess = ''
 
 # welcome user
 def welcome_user(): 
@@ -46,29 +48,38 @@ def display_board():
     global display
     print(display)
 
-def you_win():
-    print("YOU WIN! The word was: " + original_word + "! Well done, " + name.title() + "!")
+def check_win():
+    if word == '_' * length:
+        print("YOU WIN! The word was: " + original_word + "! Well done, " + name.title() + "!")
+        win = True
+        game_still_going = False
 
 def handle_turn():
     global word
     global display
     global count
     global limit
+    display_board()
     guess = input('Enter a letter..')
     guess = guess.strip()
     if len(guess) != 1 or guess.isalpha() == False:
         print("Invalid Input, Try again\n")
-    elif guess in word:
+
+def check_correct():
+    global guess
+    global word
+    global display
+    if guess in word:
         print('correct!')
         while guess in word:
             already_guessed.append(guess)
             index = word.find(guess)
             word = word[:index] + "_" + word[index + 1:]
             display = display[:index] + guess + display[index + 1:]
-    elif guess in already_guessed:
-        if guess not in word:
-            print("Already guessed! Try another letter.\n")
 
+def check_incorrect():
+    if guess in already_guessed:
+        print("Already guessed! Try another letter.\n")
     else:
         print('WRONG!')
         count += 1
@@ -135,31 +146,27 @@ def hangman():
         game_still_going = False
 
 
-    elif word == '_' * length:
-        you_win()
-
-
 def play_game():
-    display_board()
-    handle_turn()
-
-def main():
+    global lose
+    already_guessed.clear()
+    lose == False
+    win == False
     choose_word()
     print(word)
     print('Can you guess the word?')
     while game_still_going:
-      play_game()
-      if original_word == display:
-          game_still_going == False
-          you_win()
-          if input("Continue? (y/n)").strip().upper() != 'Y':
-              break
-          else:
-              main()
-      elif lose == True:
-          if input("Continue? (y/n)").strip().upper() != 'Y':
-              break
-          else:
-              main()
+        display_board()
+        handle_turn()
+        check_correct()
+        check_incorrect()
+        check_win()
+
+#loop main program
 welcome_user()
-main()
+while game_still_going:
+    play_game()
+    if lose or win == True:
+        break
+    if input("Play again?! (y/n)").strip().upper() != 'Y':
+        break
+
