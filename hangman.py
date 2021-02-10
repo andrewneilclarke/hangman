@@ -1,6 +1,5 @@
 import random
 import time
-import json
 
 word = ''
 original_word = ''
@@ -31,12 +30,15 @@ def choose_word():
     global word
     global original_word
     global length
-    wordlist = 'words_list.json'
+    wordlist = 'wordlist.txt'
+    
+    #word = (random.choice(open('wordlist.txt').readline().split()))
     with open(wordlist) as f:
-        wordlistdata = json.load(f)
-    for v in wordlistdata.values():
-        word = random.choice(v)
-        original_word = word
+        wordlistdata = f.readlines()
+    for w in wordlistdata:
+        word = random.choice(w)
+
+    original_word = word
     length = len(word)
     display = '_' * length
     return length, word, original_word
